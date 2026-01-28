@@ -15,6 +15,13 @@ RUN apt-get update && apt-get install -y \
     make \
     autoconf \
     pkg-config \
+    clamav \
+    clamav-daemon \
+    libjpeg62-turbo-dev \
+    libpng-dev \
+    libfreetype6-dev \
+    && docker-php-ext-configure gd --with-jpeg --with-freetype \
+    && docker-php-ext-install gd \
     && docker-php-ext-configure intl \
     && docker-php-ext-install \
         pdo_mysql \
@@ -28,9 +35,15 @@ RUN apt-get update && apt-get install -y \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
+RUN mkdir -p /var/www/storage/uploads \
+    && chown -R www-data:www-data /var/www/storage \
+    && chmod -R 0750 /var/www/storage
+
 # Composer
 COPY --from=composer:2.6 /usr/bin/composer /usr/bin/composer
 RUN chmod +x /usr/bin/composer
+
+RUN freshclam || true
 
 WORKDIR /var/www/html
 

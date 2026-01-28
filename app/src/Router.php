@@ -6,29 +6,74 @@ final class Router
 {
     private array $routes = [];
 
+    private function add(string $method, string $uri, array $action): void
+    {
+        $pattern = preg_replace(
+            '#\{([a-zA-Z_][a-zA-Z0-9_]*)\}#',
+            '(?P<$1>[^/]+)',
+            $uri
+        );
+
+        $pattern = '#^' . $pattern . '$#';
+
+        $this->routes[$method][] = [
+            'pattern' => $pattern,
+            'action'  => $action,
+        ];
+    }
+
     public function get(string $uri, array $action): void
     {
-        $this->routes['GET'][$uri] = $action;
+//        $this->routes['GET'][$uri] = $action;
+        $this->add('GET', $uri, $action);
     }
 
     public function post(string $uri, array $action): void
     {
-        $this->routes['POST'][$uri] = $action;
+//        $this->routes['POST'][$uri] = $action;
+        $this->add('POST', $uri, $action);
     }
+
+//    public function dispatch(): Response
+//    {
+//        $method = $_SERVER['REQUEST_METHOD'];
+//        $uri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
+//
+//        if (!array_key_exists($uri, $this->routes[$method])) {
+//            return new Response('404 Not Found', 404);
+//        }
+//
+//        [$controller, $methodName] = $this->routes[$method][$uri];
+//
+//        $controllerInstance = new $controller();
+//
+//        return $controllerInstance->$methodName(new Request());
+//    }
 
     public function dispatch(): Response
     {
         $method = $_SERVER['REQUEST_METHOD'];
-        $uri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
+        $uri    = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
 
-        if (!array_key_exists($uri, $this->routes[$method])) {
-            return new Response('404 Not Found', 404);
+        foreach ($this->routes[$method] ?? [] as $route) {
+            if (preg_match($route['pattern'], $uri, $matches)) {
+                [$controller, $methodName] = $route['action'];
+
+                $params = array_filter(
+                    $matches,
+                    fn ($k) => !is_int($k),
+                    ARRAY_FILTER_USE_KEY
+                );
+
+                $controllerInstance = new $controller();
+
+                return $controllerInstance->$methodName(
+                    new Request($params)
+                );
+            }
         }
 
-        [$controller, $methodName] = $this->routes[$method][$uri];
-
-        $controllerInstance = new $controller();
-
-        return $controllerInstance->$methodName(new Request());
+        return new Response('404 Not Found', 404);
     }
+
 }

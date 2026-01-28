@@ -9,10 +9,7 @@
 </head>
 <body>
 
-<form action="/upload" method="post" enctype="multipart/form-data">
-    <input type="file" name="file">
-    <button type="submit">send</button>
-</form>
+<h1>404 not found</h1>
 
 </body>
 </html>

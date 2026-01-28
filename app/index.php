@@ -6,6 +6,7 @@ use App\Router;
 
 require __DIR__ . '/func/functions.php';
 require __DIR__ . '/vendor/autoload.php';
+require __DIR__ . '/bootstrap.php';
 
 
 $router = new Router();

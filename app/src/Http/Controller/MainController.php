@@ -2,6 +2,7 @@
 
 namespace App\Http\Controller;
 
+use App\DTO\UploadedFile;
 use App\Request;
 use App\Response;
 use App\View;

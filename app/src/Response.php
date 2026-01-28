@@ -2,7 +2,7 @@
 
 namespace App;
 
-final class Response
+class Response
 {
     public function __construct(
         private string $content,

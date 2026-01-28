@@ -5,6 +5,7 @@ services:
     build: './docker/php'
     volumes:
       - './app:/var/www/html'
+      - './app/storage/uploads:/var/www/storage/uploads'
 
   nginx:
     image: nginx:1.27.2
@@ -13,14 +14,14 @@ services:
     volumes:
       - './app:/var/www/html'
       - './docker/nginx/conf.d:/etc/nginx/conf.d'
-  db_csrf:
+  db_file:
     image: mysql:8.4
     environment:
       MYSQL_DATABASE: ${DB_DATABASE}
       MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
     volumes:
       - './docker/db/mysql:/var/lib/mysql'
-    container_name: db_csrf
+    container_name: db_file
 
 
   phpmyadmin:
@@ -28,8 +29,8 @@ services:
     ports:
       - 8000:80
     environment:
-      PMA_HOST: db_csrf
+      PMA_HOST: db_file
       PMA_USER: root
       PMA_PASSWORD: ${MYSQL_ROOT_PASSWORD}
     depends_on:
-      - db_csrf
+      - db_file

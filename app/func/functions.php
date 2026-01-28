@@ -1,8 +1,16 @@
 <?php
 
-use App\CsrfTokenManager;
-
-function csrf_token()
+function config(string $key = null)
 {
-   return CsrfTokenManager::generateToken();
+    $config = include __DIR__ . "/../config.php";
+
+    if(null === $key){
+        return $config;
+    }
+
+    if(array_key_exists($key, $config)){
+        return $config[$key];
+    }
+    return null;
 }
+
