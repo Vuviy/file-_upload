@@ -47,7 +47,7 @@ final readonly class UploadService
 
         $storagePath = $this->filenameGenerator->generate($file, $mimeType);
 
-        $stored = $this->storage->store($file, $storagePath);
+        $stored = $this->storage->store($file, $storagePath, $mimeType);
 
         return new UploadResult($storagePath->filename(), $mimeType, $stored->size());
     }

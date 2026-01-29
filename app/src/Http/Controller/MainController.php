@@ -11,6 +11,6 @@ final class MainController
 {
     public function index(): Response
     {
-        return new Response(View::make('home'));
+        return new Response(View::make('form'));
     }
 }

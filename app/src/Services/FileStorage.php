@@ -15,7 +15,7 @@ final class FileStorage
      * @return StoredFile
      * @throws Exception
      */
-    public function store(UploadedFile $file, StoragePath $path): StoredFile
+    public function store(UploadedFile $file, StoragePath $path, string $mimeType): StoredFile
     {
         $this->ensureDirectory($path->directory());
 
@@ -25,8 +25,7 @@ final class FileStorage
 
         \chmod($path->fullPath(), 0640);
 
-
-        return new StoredFile($path->fullPath(), \filesize($path->fullPath()), );
+        return new StoredFile($path->fullPath(), \filesize($path->fullPath()), $mimeType);
     }
 
     private function ensureDirectory(string $dir): void

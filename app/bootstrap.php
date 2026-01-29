@@ -34,6 +34,15 @@ $container->set(UploadProcessingStrategyResolver::class,
     ])
 );
 
+$container->set(FileUploadPreValidator::class, fn () => new FileUploadPreValidator());
+$container->set(FileSizeValidator::class, fn () => new FileSizeValidator());
+$container->set(MimeTypeValidator::class, fn () => new MimeTypeValidator());
+$container->set(ExtensionValidator::class, fn () => new ExtensionValidator());
+$container->set(MimeExtensionMap::class, fn () => new MimeExtensionMap());
+$container->set(ClamAVVirusScanner::class, fn () => new ClamAVVirusScanner());
+$container->set(FilenameGenerator::class, fn () => new FilenameGenerator());
+$container->set(FileStorage::class, fn () => new FileStorage());
+
 $container->set(UploadService::class,
     fn ($c) => new UploadService(
         $c->get(FileUploadPreValidator::class),

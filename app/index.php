@@ -9,7 +9,7 @@ require __DIR__ . '/vendor/autoload.php';
 require __DIR__ . '/bootstrap.php';
 
 
-$router = new Router();
+$router = new Router($container);
 
 require __DIR__ . '/routes/web.php';
 
